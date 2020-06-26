@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewData["Title"] = "Talent";
+}
+
+<h2>Talent</h2>
+<h3>Upload Talent Photo</h3>
+<form action="/api/S3Bucket/UploadFile"enctype="multipart/form-data" method="post">
+    <input type="file" name="file" id="file">
+    <br>
+    <button id="uploadBtn"name="uploadBtn" type="submit">Upload</button>
+</form>
+
+<br>
+<h3>Shorten Download Link</h3>
+<form method="post" onsubmit="submitLink()">
+    <input type="text" name="url" id="url">
+    <button id="shortenBtn" name="shortenBtn" type="submit">Shorten</button>
+</form>
+<h5 id="downloadLink"></h5>
+
+<script>
+    function submitLink() {
+        event.preventDefault();
+        var url = $("#url").val();
+        $.ajax({
+            url: '/api/S3Bucket/ShortenURL',
+            method: 'POST',
+            async: false,
+            data: { url: url },
+            success: function (data) {
+                var obj = JSON.parse(data);
+                document.getElementById("downloadLink").innerHTML = "Your shortened download link is: " +obj.link;
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+</script>
+
